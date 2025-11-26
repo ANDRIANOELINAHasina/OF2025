@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote Élection des Délégués</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="vote-page">
+    <div class="vote-container">
+        <div class="page-header">
+            <img src="photos/logo.jpg" alt="Logo Ocean Farmers" class="centered-logo" style="max-width: 180px; margin-bottom: 20px;">
+            <h1 class="page-header-title">
+                <i class="fas fa-users-line" style="color: #00897b; margin-right: 10px;"></i>
+                <span id="votePageWelcome">Élection des délégués du personnel.</span>
+            </h1>
+            <p class="page-header-description">
+                <strong>Sélectionner un candidat (ou voter blanc/nul) pour chaque catégorie dans les deux collèges</strong>.
+            </p>
+        </div>
+
+        <div id="candidatsList">
+            </div>
+
+        <div class="vote-action-container">
+            <button id="btnVoter">Valider mon vote</button>
+            <p id="voteMessage" class="success-message"></p>
+            <p id="voteLimitMessage" class="error-message"></p>
+        </div>
+    </div>
+
+    <script src="vote.js"></script>
+</body>
+</html>

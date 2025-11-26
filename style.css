@@ -1,0 +1,742 @@
+/* Variables de couleur */
+:root {
+    --primary-green: #4CAF50; /* Vert pour les boutons et titres */
+    --secondary-blue: #00897b; /* Bleu/cyan pour certains titres et icônes */
+    --light-bg: #f2f7f9; /* Arrière-plan clair des conteneurs */
+    --text-color-dark: #333; /* Couleur de texte par défaut */
+    --text-color-light: #555;
+    --border-color: #ccc;
+    --error-red: #d32f2f;
+    --success-green: #8bc34a; /* MODIFICATION: Changer cette valeur pour unifier le vert */
+    --warning-orange: #ff9800; /* Couleur pour les messages d'attention */
+    --intermediate-bg-blue: #B0E0E6; /* Bleu très clair (PowderBlue) - Couleur ciel/océan */
+}
+
+/* Styles généraux du corps (fond) - Appliqué à toutes les pages SAUF intermediate_page */
+body:not(.intermediate-body) { /* Applique ces styles à tous les body sauf celui avec la classe intermediate-body */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg); /* Couleur de fond par défaut */
+    color: var(--text-color-dark); /* Couleur de texte par défaut */
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px; /* Ajoute un peu d'espace autour du contenu */
+    background-image: url('photos/page.jpg'); /* Chemin de l'image de fond corrigé */
+    background-size: cover; /* Couvre toute la zone */
+    background-position: center; /* Centre l'image de fond */
+    background-attachment: fixed; /* L'image de fond reste fixe en faisant défiler */
+}
+
+/* --- DÉBUT DES NOUVEAUX STYLES SPÉCIFIQUES À LA PAGE INTERMÉDIAIRE (INSTRUCTIONS N°01 à N°04) --- */
+
+/* INSTRUCTION N°01 & N°02: Enlever la page de fonds et mettre le fond en bleu très clair (ciel/océan) */
+body.intermediate-body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--intermediate-bg-blue); /* Couleur de fond bleu très clair */
+    color: var(--text-color-dark);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0; /* Pas de padding pour permettre à la bulle de prendre toute la largeur */
+    display: flex; /* Utilisation de flexbox pour centrer le contenu verticalement */
+    flex-direction: column;
+    justify-content: center; /* Centre verticalement */
+    align-items: center; /* Centre horizontalement */
+    min-height: 100vh; /* Prend toute la hauteur de la fenêtre */
+    overflow: hidden; /* Cache tout débordement, utile pour l'animation */
+}
+
+/* Remplacement de .welcome-cloud-box par .glass-effect-box pour l'effet vitre */
+.glass-effect-box {
+    background: rgba(255, 255, 255, 0.4); /* Fond semi-transparent */
+    backdrop-filter: blur(10px); /* Effet de flou derrière pour le verre givré */
+    -webkit-backdrop-filter: blur(10px); /* Pour la compatibilité Safari */
+    border: 1px solid rgba(255, 255, 255, 0.6); /* Bordure légère et transparente */
+    border-radius: 20px; /* Bords arrondis pour une forme rectangulaire */
+    padding: 50px 70px; /* Padding généreux */
+    margin: 0 20px; /* Marges latérales */
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37); /* Ombre pour la profondeur */
+    text-align: center;
+    max-width: 90%; /* Prend presque toute la largeur de l'écran */
+    width: fit-content; /* S'adapte au contenu si plus petit */
+    min-width: 600px; /* Largeur minimale pour l'effet */
+    box-sizing: border-box;
+    position: relative;
+
+    /* Animation d'apparition */
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    animation: fadeInSlideUp 1s ease-out forwards;
+}
+
+/* Nouvelle animation pour l'apparition de l'effet vitre */
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* INSTRUCTION N°04: Le nom du salarié apparaît dans la bulle avec le message de bienvenue */
+/* Les styles suivants s'appliquent déjà à l'intérieur de .glass-effect-box */
+.salaried-name-display {
+    font-size: 4.5em; /* Encore plus grande pour un impact maximal */
+    color: var(--warning-orange); /* Orange gras */
+    font-weight: bold;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1); /* Légère ombre pour le texte */
+}
+
+.welcome-message-secondary {
+    font-size: 1.8em; /* Plus grand et impactant */
+    color: var(--secondary-blue);
+    font-weight: bold;
+    margin-top: 10px;
+    line-height: 1.4;
+}
+
+/* Style pour le message de redirection (compte à rebours) */
+.redirection-message {
+    font-size: 1.3em;
+    color: var(--text-color-dark);
+    margin-top: 40px; /* Plus d'espace sous la bulle */
+    font-weight: normal;
+    text-align: center;
+}
+.redirection-message strong {
+    color: var(--error-red); /* Mettre le décompte en rouge pour l'attention */
+    font-size: 1.5em; /* Un peu plus grand que le reste du texte */
+}
+
+/* Styles responsive pour la page intermédiaire */
+@media (max-width: 768px) {
+    .glass-effect-box { /* Mise à jour pour .glass-effect-box */
+        padding: 40px 50px;
+        min-width: unset; /* Annule le min-width pour les petits écrans */
+        width: 95%; /* Prend plus de largeur sur mobile */
+        margin: 0 10px;
+        border-radius: 15px; /* Ajuste le border-radius pour mobile */
+    }
+    .salaried-name-display {
+        font-size: 3em;
+    }
+    .welcome-message-secondary {
+        font-size: 1.4em;
+    }
+    .redirection-message {
+        font-size: 1em;
+        margin-top: 30px;
+    }
+    .redirection-message strong {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-effect-box { /* Mise à jour pour .glass-effect-box */
+        padding: 30px 20px;
+        border-radius: 10px; /* Encore plus ajusté */
+    }
+    .salaried-name-display {
+        font-size: 2.2em;
+    }
+    .welcome-message-secondary {
+        font-size: 1.1em;
+    }
+    .redirection-message {
+        font-size: 0.9em;
+        margin-top: 20px;
+    }
+    .redirection-message strong {
+        font-size: 1.1em;
+    }
+}
+
+/* --- FIN DES NOUVEAUX STYLES SPÉCIFIQUES À LA PAGE INTERMÉDIAIRE --- */
+
+
+/* ----------------------------------------------------- */
+/* ANCIENS STYLES (PAS TOUCHÉS SAUF LE BODY GÉNÉRAL) */
+/* ----------------------------------------------------- */
+
+/* Conteneur principal pour les pages d'authentification et intermédiaire */
+/* NOTE: .main-content-container n'est plus utilisé dans intermediate_page.html */
+.main-content-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+}
+/* Styles du logo */
+.logo-container {
+    margin-bottom: 25px;
+}
+.centered-logo {
+    max-width: 200px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+/* Titre principal de la page (utilisé pour page 1 et authentification) */
+.main-page-title {
+    font-size: 2.2em;
+    color: var(--secondary-blue);
+    margin-bottom: 25px;
+    font-weight: bold;
+    line-height: 1.3;
+}
+.main-page-title .login-icon {
+    font-size: 0.9em;
+    vertical-align: middle;
+    margin-right: 10px;
+    color: #e91e63;
+}
+/* --- Styles spécifiques à la page d'authentification et aux nouveaux textes --- */
+.auth-intro-text {
+    text-align: left;
+    margin-bottom: 25px;
+    color: var(--text-color-dark);
+    font-size: 1em;
+    padding: 0 15px;
+}
+.auth-intro-text p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+.auth-icon {
+    color: #ff9800;
+    margin-right: 8px;
+    font-size: 1.1em;
+}
+.auth-checklist {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+.auth-checklist li {
+    margin-bottom: 8px;
+    color: var(--text-color-dark);
+    display: flex;
+    align-items: center;
+}
+.checklist-icon {
+    color: var(--success-green);
+    margin-right: 10px;
+    font-size: 1em;
+}
+.auth-verification-message {
+    color: var(--success-green);
+    font-size: 1.3em;
+    text-align: center;
+}
+/* Section d'introduction (page 1) */
+.intro-section {
+    padding: 20px 30px;
+    text-align: left;
+    color: var(--text-color-dark);
+}
+.intro-section h2.green-text,
+.intro-section h2.blue-text {
+    color: var(--secondary-blue);
+    font-size: 1.6em;
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+.intro-section p {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+.left-align-text {
+    text-align: left;
+}
+.left-align-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 15px;
+}
+.left-align-list li {
+    margin-bottom: 8px;
+    color: var(--text-color-dark);
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+.left-align-list li i.checklist-icon {
+    color: var(--success-green);
+    margin-right: 10px;
+    font-size: 1.1em;
+}
+.highlight-text {
+    color: var(--error-red);
+    font-weight: bold;
+}
+/* Boîte d'attention (Page Authentification) */
+.attention-box {
+    background-color: #fce4ec;
+    border-left: 5px solid var(--error-red);
+    padding: 15px 20px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+    color: var(--text-color-dark);
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.attention-box p {
+    margin: 5px 0;
+}
+.attention-box .fas {
+    color: var(--error-red);
+    margin-right: 10px;
+}
+/* Styles du formulaire d'identification */
+.identification-section {
+    padding: 0 30px;
+}
+.identification-section form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.input-group {
+    width: 100%;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--text-color-dark);
+}
+.input-group select,
+.input-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1em;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+.input-group select:focus,
+.input-group input[type="password"]:focus {
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.2);
+    outline: none;
+}
+/* Messages de validation / erreur */
+.message {
+    margin-top: 10px;
+    font-weight: bold;
+    font-size: 0.9em;
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+.error-message {
+    color: var(--error-red);
+}
+.success-message {
+    color: var(--success-green);
+}
+/* Boutons de navigation/action */
+.navigation-buttons {
+    margin-top: 30px;
+    padding: 0 30px;
+}
+.btn-green,
+#btnConnecter {
+    background-color: var(--primary-green);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: block;
+    margin: 20px auto 0 auto;
+    width: fit-content;
+}
+.btn-green:hover,
+#btnConnecter:hover {
+    background-color: #43A047;
+    transform: translateY(-2px);
+}
+.btn-green:disabled,
+#btnConnecter:disabled {
+    background-color: #A5D6A7;
+    cursor: not-allowed;
+    transform: none;
+}
+/* Styles pour la page de vote */
+.vote-page {
+    padding: 0;
+}
+.vote-container {
+    background-color: rgba(255, 255, 255, 0.95);
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    box-sizing: border-box;
+}
+.page-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+.page-header-title {
+    font-size: 2em;
+    color: var(--secondary-blue);
+    margin-top: 15px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+.page-header-description {
+    font-size: 1.1em;
+    color: var(--text-color-light);
+    margin-bottom: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Styles pour la page intermédiaire */
+/* NOTE: Ces styles sont maintenant remplacés ou rendus obsolètes par les nouveaux styles .glass-effect-box etc.
+    Vous pouvez les garder si d'autres pages les utilisent, mais pour intermediate_page, ils n'auront plus d'effet. */
+.info-box-intermediate {
+    background-color: #e0f7fa;
+    border-left: 5px solid #00bcd4;
+    padding: 15px 20px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+    text-align: left;
+    color: #00838f;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.info-box-intermediate .fas {
+    color: #00bcd4;
+    margin-right: 10px;
+}
+.welcome-message-intermediate {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    line-height: 1.8;
+}
+.welcome-message-intermediate strong {
+    color: var(--secondary-blue);
+}
+.action-message-intermediate {
+    font-size: 1.1em;
+    color: var(--primary-green);
+    font-weight: bold;
+    margin-top: 30px;
+}
+.check-icon {
+    color: var(--primary-green);
+    margin-right: 8px;
+}
+/* Styles pour les sections de candidats dans vote.html (temporaire pour la structure) */
+.college-section {
+    margin-bottom: 40px;
+    border: 1px solid #eee;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fcfcfc;
+}
+.college-title {
+    font-size: 1.8em;
+    color: var(--secondary-blue);
+    margin-bottom: 20px;
+}
+.college-description {
+    font-size: 1em;
+    color: var(--text-color-light);
+    margin-bottom: 25px;
+}
+.sous-categorie-section {
+    margin-bottom: 30px;
+    background-color: #ffffff; /* Ce sera surchargé par les styles spécifiques */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #f0f0f0; /* Ce sera surchargé par les styles spécifiques */
+}
+/* NOUVEAUX STYLES POUR COULEURS DE FOND DES CATÉGORIES (Collège Terrain) */
+.college-terrain .categorie-terrain-cadre,
+.college-terrain .categorie-terrain-non-cadre {
+    background-color: #ffe0b2; /* Orange très clair (Peach) */
+    border-color: #ffcc80; /* Bordure un peu plus foncée pour le contraste */
+}
+/* NOUVEAUX STYLES POUR COULEURS DE FOND DES CATÉGORIES (Collège Bureau) */
+.college-bureau .categorie-bureau-cadre,
+.college-bureau .categorie-bureau-non-cadre {
+    background-color: #e1bee7; /* Violet très clair (Lavender Blush) */
+    border-color: #ce93d8; /* Bordure un peu plus foncée pour le contraste */
+}
+.sous-categorie-title {
+    font-size: 1.4em;
+    color: var(--primary-green); /* Ce sera surchargé par les styles spécifiques */
+    margin-bottom: 20px;
+}
+/* NOUVEAUX STYLES POUR COULEURS DES TITRES DE SOUS-CATÉGORIES (Collège Terrain) */
+.college-terrain .sous-categorie-title {
+    color: #e65100; /* Orange foncé pour le texte des titres du collège terrain */
+    background-color: #ffebcd; /* Orange encore plus clair pour le fond du titre */
+    padding: 10px;
+    border-radius: 5px;
+}
+/* NOUVEAUX STYLES POUR COULEURS DES TITRES DE SOUS-CATÉGORIES (Collège Bureau) */
+.college-bureau .sous-categorie-title {
+    color: #6a1b9a; /* Violet foncé pour le texte des titres du collège bureau */
+    background-color: #f3e5f5; /* Violet encore plus clair pour le fond du titre */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+
+.candidats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    padding: 10px 0;
+}
+.candidat-card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.candidat-card:hover {
+    border-color: var(--secondary-blue);
+    box-shadow: 0 4px 10px rgba(0, 137, 123, 0.1);
+    transform: translateY(-3px);
+}
+.candidat-card.selected {
+    border: 3px solid var(--primary-green);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+    transform: scale(1.02);
+}
+.candidat-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 2px solid #eee;
+}
+.candidat-name {
+    font-weight: bold;
+    color: var(--secondary-blue);
+    margin-bottom: 5px;
+    font-size: 1.1em;
+}
+.candidat-details {
+    font-size: 0.9em;
+    color: var(--text-color-light);
+    margin-bottom: 3px;
+}
+.other-options-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px dashed #eee;
+}
+.other-options-title {
+    font-size: 1.2em;
+    color: var(--secondary-blue);
+    margin-bottom: 15px;
+}
+.options-description-text {
+    font-size: 0.95em;
+    color: var(--text-color-light);
+    margin-bottom: 20px;
+}
+.special-options-bubbles-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.special-option-card {
+    background-color: #e0f2f7;
+    border: 1px solid #b2ebf2;
+    border-radius: 25px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+}
+.special-option-card:hover {
+    background-color: #c0deed;
+    border-color: #80deea;
+    transform: translateY(-2px);
+}
+.special-option-card.selected {
+    border: 3px solid var(--secondary-blue);
+    background-color: #a7d9ee;
+    box-shadow: 0 4px 8px rgba(0, 137, 123, 0.2);
+    transform: scale(1.03);
+}
+.special-option-text {
+    font-weight: bold;
+    color: var(--secondary-blue);
+    font-size: 0.95em;
+}
+.vote-action-container {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+#btnVoter {
+    padding: 15px 35px;
+    font-size: 1.2em;
+    border-radius: 10px;
+}
+#voteMessage, #voteLimitMessage {
+    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+.results-information-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #e8f5e9;
+    border-left: 5px solid var(--primary-green);
+    border-radius: 5px;
+    text-align: left;
+    font-size: 0.95em;
+    color: var(--text-color-dark);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+.results-text-style strong {
+    color: var(--primary-green);
+}
+/* Media Queries pour la responsivité */
+@media (max-width: 768px) {
+    .main-content-container, .vote-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    .main-page-title {
+        font-size: 1.8em;
+    }
+    .intro-section h2, .page-header-title {
+        font-size: 1.4em;
+    }
+    .input-group {
+        max-width: 100%;
+    }
+    #btnConnecter {
+        max-width: 100%;
+    }
+    .candidats-grid {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+    .candidat-image {
+        width: 80px;
+        height: 80px;
+    }
+    .candidat-name {
+        font-size: 1em;
+    }
+    .candidat-details {
+        font-size: 0.85em;
+    }
+    .special-option-card {
+        min-width: 100px;
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+    #btnVoter {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    .main-content-container, .vote-container {
+        margin: 10px auto;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    .main-page-title {
+        font-size: 1.5em;
+    }
+    .main-page-title .login-icon {
+        font-size: 0.8em;
+    }
+    .auth-intro-text {
+        font-size: 0.9em;
+        padding: 0 5px;
+    }
+    .attention-box, .info-box-intermediate, .results-information-section {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    .input-group label {
+        font-size: 0.9em;
+    }
+    .input-group select,
+    .input-group input[type="password"] {
+        padding: 10px 12px;
+        font-size: 0.9em;
+    }
+    .message {
+        font-size: 0.8em;
+    }
+    .btn-green, #btnConnecter {
+        padding: 10px 20px;
+        font-size: 1em;
+    }
+    .page-header-title {
+        font-size: 1.2em;
+    }
+    .page-header-description {
+        font-size: 0.9em;
+    }
+    .college-title {
+        font-size: 1.5em;
+    }
+    .sous-categorie-title {
+        font-size: 1.1em;
+    }
+    .candidat-card {
+        padding: 10px;
+    }
+    .candidat-image {
+        width: 70px;
+        height: 70px;
+    }
+    .candidat-name {
+        font-size: 0.9em;
+    }
+}

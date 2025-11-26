@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentification du Votant - Ocean Farmers</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="main-content-container">
+        <div class="logo-container">
+            <img src="photos/logo.jpg" alt="Ocean Farmers Logo" class="centered-logo">
+        </div>
+
+        <h1 class="main-page-title">
+            <i class="fas fa-vote-yea login-icon"></i> Authentification du salarié
+        </h1>
+
+        <div class="auth-intro-text">
+            <p>Dans le cadre du processus de vote, chaque salarié est tenu de <strong>sélectionner son identifiant</strong> et de <strong>saisir son mot de passe personnel</strong>.</p>
+            <ul class="auth-checklist">
+                <li><i class="fas fa-lock auth-icon"></i> Ces informations sont essentielles pour :</li>
+                <ul>
+                    <li><i class="fas fa-check-circle checklist-icon"></i> garantir la sécurité</li>
+                    <li><i class="fas fa-check-circle checklist-icon"></i> assurer la confidentialité</li>
+                    <li><i class="fas fa-check-circle checklist-icon"></i> permettre la traçabilité du vote</li>
+                </ul>
+            </ul>
+        </div>
+
+        <div class="attention-box">
+            <p><i class="fas fa-exclamation-triangle"></i> <strong>**ATTENTION :**</strong></p>
+            <p>Il est impératif que les données soient <span class="highlight-text">correctement saisies</span>. Toute erreur dans l'identifiant ou le mot de passe entraînera l'<span class="highlight-text">invalidation du vote</span>, car le système ne pourra pas reconnaître l'électeur.</p>
+        </div>
+
+        <p class="auth-verification-message" style="font-weight: bold; margin-bottom: 25px;">
+            <i class="fas fa-check-circle checklist-icon"></i> Merci de vérifier attentivement vos informations avant de valider votre participation.
+        </p>
+
+        <section class="identification-section">
+            <form id="authForm"> <div class="input-group">
+                    <label for="identifiant">Votre identifiant :</label>
+                    <select id="identifiant" name="identifiant" required>
+                        <option value="">Sélectionner votre identifiant</option>
+                        </select>
+                </div>
+                <div class="input-group">
+                    <label for="password">Mot de passe :</label> <input type="password" id="password" name="password" placeholder="Entrez votre mot de passe" required>
+                </div>
+
+                <div id="matchMessage" class="message" style="display: none;"></div>
+
+                <div id="errorMessage" class="message error-message" style="display: none;"></div>
+                <div id="successMessage" class="message success-message" style="display: none;"></div>
+
+                <div class="navigation-buttons">
+                    <button type="submit" id="btnConnecter" class="btn-green">Se connecter</button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
