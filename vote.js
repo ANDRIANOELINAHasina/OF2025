@@ -58,14 +58,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const candidats = [
         // Collège Terrain
         // Sous-catégorie CADRE (RTPA)
-        { id: 'T-C001', nom: 'ANDRIANAHY Tohimahery Manantena', matricule: '280', Service: 'TPR', photo: 'photos/Mahery.jpg', college: 'Terrain', sous_categorie: 'CADRE', type: 'candidat' },
-        { id: 'T-C003', nom: 'RALAIAVY STEPHANOEL GUEL', matricule: '018', Service: 'TPR', photo: 'photos/Stephanoel.jpeg', college: 'Terrain', sous_categorie: 'CADRE', type: 'candidat' },
+        { id: 'T-C001', nom: 'ANDRIANAHY Tohimahery Manantena', matricule: '280', Service: 'TPR', photo: 'Mahery.jpg', college: 'Terrain', sous_categorie: 'CADRE', type: 'candidat' },
+        { id: 'T-C003', nom: 'RALAIAVY STEPHANOEL GUEL', matricule: '018', Service: 'TPR', photo: 'Stephanoel.jpeg', college: 'Terrain', sous_categorie: 'CADRE', type: 'candidat' },
         // Options spéciales pour CADRE Terrain (bulles sans photo)
         { id: 'Vato Fotsy Terrain CADRE', nom: 'Vato Fotsy (Vote Blanc)', college: 'Terrain', sous_categorie: 'CADRE', type: 'special_category_option' },
         { id: 'Vato Maty Terrain CADRE', nom: 'Vato Maty (Vote Nul)', college: 'Terrain', sous_categorie: 'CADRE', type: 'special_category_option' },
 
         // Sous-catégorie NON CADRE (Terrain)
-        { id: 'T-C007', nom: 'TODISOA Richard Tsimanevoke Christophe', matricule: '134', Service: 'TPR', photo: 'photos/Todisoa Richard.jpeg', college: 'Terrain', sous_categorie: 'NON CADRE', type: 'candidat' },
+        { id: 'T-C007', nom: 'TODISOA Richard Tsimanevoke Christophe', matricule: '134', Service: 'TPR', photo: 'Todisoa Richard.jpeg', college: 'Terrain', sous_categorie: 'NON CADRE', type: 'candidat' },
         // Options spéciales pour NON CADRE Terrain (bulles sans photo)
         { id: 'Vato Fotsy Terrain NON CADRE', nom: 'Vato Fotsy (Vote Blanc)', college: 'Terrain', sous_categorie: 'NON CADRE', type: 'special_category_option' },
         { id: 'Vato Maty Terrain NON CADRE', nom: 'Vato Maty (Vote Nul)', college: 'Terrain', sous_categorie: 'NON CADRE', type: 'special_category_option' },
@@ -73,14 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Collège Bureau
         // Sous-catégorie CADRE (Bureau)
-        { id: 'B-C002', nom: 'RAHENIARIJAONA Jean Christian Angelo', matricule: '318', Service: 'ADM', photo: 'photos/Angelo.jpeg', college: 'Bureau', sous_categorie: 'CADRE', type: 'candidat' },
+        { id: 'B-C002', nom: 'RAHENIARIJAONA Jean Christian Angelo', matricule: '318', Service: 'ADM', photo: 'Angelo.jpeg', college: 'Bureau', sous_categorie: 'CADRE', type: 'candidat' },
         // Options spéciales pour CADRE Bureau (bulles sans photo)
         { id: 'Vato Fotsy Bureau CADRE', nom: 'Vato Fotsy (Vote Blanc)', college: 'Bureau', sous_categorie: 'CADRE', type: 'special_category_option' },
         { id: 'Vato Maty Bureau CADRE', nom: 'Vato Maty (Vote Nul)', college: 'Bureau', sous_categorie: 'CADRE', type: 'special_category_option' },
 
         // Sous-catégorie NON CADRE (Bureau)
-        { id: 'B-C006', nom: 'RALISOA Chrétienne', matricule: '213', Service: 'ADM', photo: 'photos/Chretienne.jpg', college: 'Bureau', sous_categorie: 'NON CADRE', type: 'candidat' },
-        { id: 'B-C008', nom: 'RAZAFIDONAHARINARIVO Marc Anthony', matricule: '285', Service: 'DUR', photo: 'photos/Anthony.jpeg', college: 'Bureau', sous_categorie: 'NON CADRE', type: 'candidat' },
+        { id: 'B-C006', nom: 'RALISOA Chrétienne', matricule: '213', Service: 'ADM', photo: 'Chretienne.jpg', college: 'Bureau', sous_categorie: 'NON CADRE', type: 'candidat' },
+        { id: 'B-C008', nom: 'RAZAFIDONAHARINARIVO Marc Anthony', matricule: '285', Service: 'DUR', photo: 'Anthony.jpeg', college: 'Bureau', sous_categorie: 'NON CADRE', type: 'candidat' },
         // Options spéciales pour NON CADRE Bureau (bulles sans photo)
         { id: 'Vato Fotsy Bureau NON CADRE', nom: 'Vato Fotsy (Vote Blanc)', college: 'Bureau', sous_categorie: 'NON CADRE', type: 'special_category_option' },
         { id: 'Vato Maty Bureau NON CADRE', nom: 'Vato Maty (Vote Nul)', college: 'Bureau', sous_categorie: 'NON CADRE', type: 'special_category_option' }
@@ -396,4 +396,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     // FIN DES MODIFICATIONS POUR LA DATE
+
 });
