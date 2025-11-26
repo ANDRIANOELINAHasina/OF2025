@@ -398,3 +398,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // FIN DES MODIFICATIONS POUR LA DATE
 
 });
+
