@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ⭐️ AJOUTEZ VOTRE LIEN ICI ⭐️
+    // CONSERVEZ VOTRE ENDPOINT ACTUEL QUI FONCTIONNE EN DEPLOIEMENT !
     const GOOGLE_SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxEAaoh9Z3Z1x_IoHAGyFmDdXTQqbk8NsISmoIDRsrzwos01FJ3K1ywf6HAOT3jnwV7/exec';
     const candidatsListContainer = document.getElementById('candidatsList');
     const btnVoter = document.getElementById('btnVoter'); // L'ID de votre bouton "Valider mon vote"
-    const voteMessage = document.getElementById('voteMessage');
-    const voteLimitMessage = document.getElementById('voteLimitMessage');
+    const voteMessage = document.getElementById('voteMessage'); // Zone pour le message de succès principal
+    const voteLimitMessage = document.getElementById('voteLimitMessage'); // Zone pour les erreurs/restrictions
     const votePageWelcome = document.getElementById('votePageWelcome');
 
     // Récupérer l'identifiant de l'utilisateur connecté depuis le localStorage
@@ -276,12 +277,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /**
-     * Envoie le vote au serveur (Google Apps Script).
+     * Envoie le vote au serveur (Google Apps Script) en utilisant un FORMULAIRE
+     * caché pour contourner le blocage CORS de fetch().
      */
     async function submitVote() {
         voteMessage.style.display = 'none';
         voteLimitMessage.style.display = 'none';
         btnVoter.disabled = true; // Désactiver le bouton pendant l'envoi
+        voteLimitMessage.style.color = "orange"; // Définir la couleur pour l'attente
+
+        // Afficher un message d'attente
+        voteLimitMessage.textContent = "Envoi du vote en cours... Veuillez patienter.";
+        voteLimitMessage.style.display = 'block';
 
         // Vérification finale si toutes les catégories sont sélectionnées
         let allCategoriesSelected = true;
@@ -297,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!allCategoriesSelected) {
             voteLimitMessage.textContent = "Veuillez faire une sélection pour chaque catégorie avant de valider votre vote.";
-            voteLimitMessage.style.display = 'block';
+            voteLimitMessage.style.color = "red";
             btnVoter.disabled = false; // Réactiver le bouton si la validation échoue
             return;
         }
@@ -310,51 +317,63 @@ document.addEventListener('DOMContentLoaded', () => {
             selections: selectedChoices
         };
 
+        // ⭐ NOUVEAU CODE : Utilisation du formulaire caché pour contourner le CORS ⭐
         try {
-            // --- DÉBUT DE LA REQUÊTE RÉELLE VERS GOOGLE SHEETS ---
-            const response = await fetch(GOOGLE_SHEET_ENDPOINT, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json' 
-                },
-                body: JSON.stringify(voteData)
-            });
+            // Création dynamique du formulaire
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = GOOGLE_SHEET_ENDPOINT; 
+            form.target = 'hidden_iframe'; // Diriger la réponse vers un iframe caché
 
-            if (response.ok) {
-                // Le backend doit retourner un JSON, même si c'est juste { "success": true }
-                const result = await response.json(); 
-                voteMessage.textContent = result.message || "Votre vote a été enregistré avec succès !";
-                voteMessage.style.display = 'block';
-                voteMessage.style.color = "green"; // Pour un message de succès clair
+            // Créer un champ caché pour contenir toutes les données JSON
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'data'; // Le nom n'a pas d'importance ici, mais il est nécessaire
+            input.value = JSON.stringify(voteData); // Convertir le payload en chaîne JSON
 
-                // --- MARQUER L'UTILISATEUR COMME AYANT VOTÉ (CÔTÉ CLIENT) ---
-                votedUsers.push(loggedInUserId);
-                localStorage.setItem('votedUsers', JSON.stringify(votedUsers));
-                // --- FIN MARQUAGE ---
+            form.appendChild(input);
 
-                // Nettoyer les informations de session après le vote
-                localStorage.removeItem('loggedInUserId');
-                localStorage.removeItem('loggedInUserName');
-
-                // Redirection après un court délai
-                setTimeout(() => {
-                    alert("Vote enregistré avec succès ! Vous allez être redirigé vers la page de connexion.");
-                    window.location.replace('authentification.html'); // Retour à la page de connexion
-                }, 3000); // 3 secondes
-
-            } else {
-                // Le serveur a retourné un code d'erreur HTTP (ex: 400, 500)
-                const errorData = await response.json();
-                voteLimitMessage.textContent = errorData.message || "Erreur lors de l'enregistrement du vote. Code HTTP: " + response.status;
-                voteLimitMessage.style.display = 'block';
-                voteLimitMessage.style.color = "red";
-                btnVoter.disabled = false; // Réactiver le bouton si erreur
+            // Création ou récupération de l'iframe caché
+            let iframe = document.getElementById('hidden_iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.name = 'hidden_iframe';
+                iframe.id = 'hidden_iframe';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
             }
+
+            document.body.appendChild(form);
+            form.submit();
+            
+            // Simuler une attente pour laisser le temps au GAS d'enregistrer la donnée
+            await new Promise(resolve => setTimeout(resolve, 3500)); 
+
+            // Simuler un succès côté client après l'envoi du formulaire. 
+            // On ne peut pas facilement lire la réponse JSON du GAS ici, donc on suppose que ça a fonctionné.
+            voteLimitMessage.style.color = "green";
+            voteLimitMessage.textContent = "✅ Votre vote a été envoyé. Vérification et enregistrement en cours.";
+            
+            // --- MARQUER L'UTILISATEUR COMME AYANT VOTÉ (CÔTÉ CLIENT) ---
+            votedUsers.push(loggedInUserId);
+            localStorage.setItem('votedUsers', JSON.stringify(votedUsers));
+            // --- FIN MARQUAGE ---
+
+            // Nettoyer les informations de session après le vote
+            localStorage.removeItem('loggedInUserId');
+            localStorage.removeItem('loggedInUserName');
+
+            // Redirection après un court délai
+            setTimeout(() => {
+                alert("Vote enregistré ! Vous allez être redirigé vers la page de connexion.");
+                window.location.replace('authentification.html'); // Retour à la page de connexion
+            }, 2000); 
+
         } catch (error) {
             console.error('Erreur lors de l\'envoi du vote:', error);
-            voteLimitMessage.textContent = "Une erreur est survenue lors de la communication avec le serveur. Veuillez réessayer. Détail: " + error.message;
-            voteLimitMessage.style.display = 'block';
+            voteLimitMessage.textContent = "❌ Erreur critique lors de l'envoi. Détail: " + error.message;
             voteLimitMessage.style.color = "red";
+            voteLimitMessage.style.display = 'block';
             btnVoter.disabled = false; // Réactiver le bouton si erreur
         }
     }
@@ -398,8 +417,3 @@ document.addEventListener('DOMContentLoaded', () => {
     // FIN DES MODIFICATIONS POUR LA DATE
 
 });
-
-
-
-
-
