@@ -20,7 +20,7 @@ body:not(.intermediate-body) { /* Applique ces styles à tous les body sauf celu
     line-height: 1.6;
     margin: 0;
     padding: 20px; /* Ajoute un peu d'espace autour du contenu */
-    background-image: url('photos/page.jpg'); /* Chemin de l'image de fond corrigé */
+    background-image: url('page.jpg'); /* Chemin de l'image de fond corrigé */
     background-size: cover; /* Couvre toute la zone */
     background-position: center; /* Centre l'image de fond */
     background-attachment: fixed; /* L'image de fond reste fixe en faisant défiler */
@@ -739,4 +739,5 @@ body.intermediate-body {
     .candidat-name {
         font-size: 0.9em;
     }
+
 }
