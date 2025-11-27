@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Résultats du Vote (ADMIN)</title>
+    <title>Résultats du Vote (Transparence)</title>
     
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
@@ -23,13 +23,13 @@
         .candidate-name { font-weight: bold; }
         .vote-count { color: #007bff; font-weight: bold; }
         .total-votes-title { font-size: 1.2em; color: green; font-weight: bold; margin-bottom: 15px;}
-        .error { color: red; }
+        .error { color: red; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <h1>📊 Tableau de Bord des Résultats Officiels</h1>
-    <p>Cette page affiche les résultats en temps réel directement depuis la base de données Firebase.</p>
+    <h1>📊 Tableau de Bord des Résultats Officiels (En temps réel)</h1>
+    <p>Ce tableau affiche l'évolution des votes en direct. Mise à jour automatique.</p>
 
     <div id="results-container">
         <p>Chargement des résultats...</p>
@@ -39,7 +39,7 @@
     <script>
         // 3. CONFIGURATION ET INITIALISATION FIREBASE
         
-        // ⚠️ VÉRIFIEZ LA COHÉRENCE AVEC VOTRE FICHIER vote.js ! ⚠️
+        // Configuration utilisée : VÉRIFIEZ LA COHÉRENCE AVEC VOTRE FICHIER vote.js
         const firebaseConfig = {
             apiKey: "AIzaSyDBSeXQ9CKWSDhNup51XPL0FKEgQc7xiT8", 
             authDomain: "voteof2025.firebaseapp.com",
@@ -51,7 +51,6 @@
             measurementId: "G-HBN2JMS2M1"
         };
 
-        // Initialisation de l'application
         const app = firebase.initializeApp(firebaseConfig);
         const database = app.database();
 
@@ -59,67 +58,55 @@
         // 4. LOGIQUE DE CALCUL ET D'AFFICHAGE DES RÉSULTATS
         // -----------------------------------------------------------
 
-        /**
-         * Lit les données de vote de Firebase, calcule les résultats
-         * et les affiche sur la page.
-         */
         function fetchResults() {
             const resultsRef = database.ref('votes'); 
             const resultsContainer = document.getElementById('results-container');
             const totalVotersElement = document.getElementById('total-voters-count');
 
-            // .on('value') permet d'écouter les changements en temps réel
+            // .on('value') écoute les changements en temps réel
             resultsRef.on('value', (snapshot) => {
                 
-                resultsContainer.innerHTML = ''; // Nettoyer l'affichage précédent
+                resultsContainer.innerHTML = ''; // Nettoyage
                 
                 if (!snapshot.exists()) {
                     totalVotersElement.textContent = "Total des votants uniques: 0";
-                    resultsContainer.innerHTML = '<p class="error">Aucun vote trouvé dans la base de données.</p>';
+                    resultsContainer.innerHTML += '<p class="error">Aucun vote trouvé dans la base de données.</p>';
+                    resultsContainer.appendChild(totalVotersElement);
                     return;
                 }
 
                 const allVotes = snapshot.val();
-                const counts = {}; // Stocke les résultats agrégés
-                const uniqueVoters = new Set(); // S'assure qu'on compte chaque utilisateur qu'une seule fois
+                const counts = {}; 
+                const uniqueVoters = new Set(); 
 
-                // 1. Parcourir tous les enregistrements de vote
+                // 1. Calcul des résultats
                 for (const key in allVotes) {
                     const voteRecord = allVotes[key];
                     const cleanUserId = voteRecord.cleanUserId;
                     
-                    // Si l'utilisateur n'a pas été compté comme votant unique, l'ajouter
                     if (!uniqueVoters.has(cleanUserId)) {
                         uniqueVoters.add(cleanUserId);
                     }
 
                     const selections = voteRecord.selections;
 
-                    // 2. Compter les sélections par catégorie (Collège et Sous-catégorie)
                     for (const college in selections) {
-                        if (!counts[college]) {
-                            counts[college] = {};
-                        }
+                        if (!counts[college]) counts[college] = {};
 
                         for (const subCategory in selections[college]) {
                             const choiceId = selections[college][subCategory];
                             const keyName = `${college} - ${subCategory}`; 
                             
-                            if (!counts[college][keyName]) {
-                                counts[college][keyName] = {};
-                            }
+                            if (!counts[college][keyName]) counts[college][keyName] = {};
 
-                            // Incrémenter le compteur du choix
                             counts[college][keyName][choiceId] = (counts[college][keyName][choiceId] || 0) + 1;
                         }
                     }
                 }
 
-                // 3. Afficher les résultats agrégés
-                
-                // Mettre à jour le nombre total de votants uniques
+                // 2. Affichage
                 totalVotersElement.textContent = `Total des votants uniques: ${uniqueVoters.size}`;
-                resultsContainer.appendChild(totalVotersElement); // Remettre l'élément en haut
+                resultsContainer.appendChild(totalVotersElement); 
 
                 for (const college in counts) {
                     const collegeDiv = document.createElement('div');
@@ -127,16 +114,13 @@
                     collegeDiv.innerHTML = `<h2>Collège: ${college}</h2>`;
                     
                     for (const keyName in counts[college]) {
-                        // keyName est au format "Collège - Catégorie"
                         const categoryName = keyName.split(' - ')[1];
                         
                         collegeDiv.innerHTML += `<h3>Catégorie: ${categoryName}</h3>`;
                         
-                        // Trier les résultats de cette catégorie (du plus voté au moins voté)
                         const sortedChoices = Object.entries(counts[college][keyName])
                             .sort(([, a], [, b]) => b - a);
 
-                        // Afficher les lignes de résultats
                         sortedChoices.forEach(([choiceId, voteCount]) => {
                             const row = document.createElement('div');
                             row.className = 'candidate-row';
@@ -151,8 +135,8 @@
                 }
                 
             }, (error) => {
-                // Gestion des erreurs de lecture (ex: règles de sécurité interdisant la lecture)
-                resultsContainer.innerHTML = `<p class="error">Erreur de lecture Firebase: ${error.message}. Vérifiez vos règles de sécurité.</p>`;
+                // Gestion des erreurs de lecture (si les règles sont incorrectement configurées)
+                resultsContainer.innerHTML = `<p class="error">Erreur de lecture Firebase: ${error.message}. Vérifiez les règles de sécurité de la base de données.</p>`;
             });
         }
 
