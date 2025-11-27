@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: '056 - RAMIANDRISOA Toky Mamy', mdp: 'M4DX' },
         { id: '058 - NAMBININJANAHARY Ali Martial Léonce', mdp: 'C9HT' },
         { id: '061 - JEAN MARIE Adolphe', mdp: 'ULM5' },
-        { id: '068 - HERINTOKY Christian Robinson', mdp: 'L2BE' },
         { id: '070 - RAMAKASOANIRINA Vonintsoanandraina', mdp: '7YNP' },
         { id: '073 - RAKOTONANAHARY Jérôme', mdp: '4WDN' },
         { id: '076 - EHODA Jean Claude', mdp: 'T1UN' },
@@ -234,4 +233,5 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Un ou plusieurs éléments HTML nécessaires au script d'authentification n'ont pas été trouvés. Vérifiez les IDs.");
     }
+
 });
