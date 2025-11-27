@@ -21,30 +21,34 @@
         .college-results { margin-bottom: 30px; border-left: 5px solid #007bff; padding-left: 15px; }
         .candidate-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #eee; }
         .candidate-name { font-weight: bold; }
-        .total-votes { font-size: 1.2em; color: green; font-weight: bold; }
+        .vote-count { color: #007bff; font-weight: bold; }
+        .total-votes-title { font-size: 1.2em; color: green; font-weight: bold; margin-bottom: 15px;}
         .error { color: red; }
     </style>
 </head>
 <body>
 
     <h1>📊 Tableau de Bord des Résultats Officiels</h1>
-    <p>Cette page est sécurisée via les règles Firebase (vérifiez vos règles pour restreindre l'accès en lecture).</p>
+    <p>Cette page affiche les résultats en temps réel directement depuis la base de données Firebase.</p>
 
     <div id="results-container">
         <p>Chargement des résultats...</p>
-        <p id="total-voters-count">Total des votants uniques: 0</p>
+        <p id="total-voters-count" class="total-votes-title">Total des votants uniques: 0</p>
     </div>
 
     <script>
-        // ÉTAPE 2: INITIALISATION DE FIREBASE
+        // 3. CONFIGURATION ET INITIALISATION FIREBASE
         
-        // ⚠️ REMPLACER CE BLOC PAR VOTRE CONFIGURATION FIREBASE RÉELLE ! ⚠️
+        // ⚠️ VÉRIFIEZ LA COHÉRENCE AVEC VOTRE FICHIER vote.js ! ⚠️
         const firebaseConfig = {
-            apiKey: "VOTRE_API_KEY", 
-            authDomain: "votre-projet.firebaseapp.com",
-            databaseURL: "https://votre-projet-default-rtdb.firebaseio.com", 
-            projectId: "votre-projet",
-            // ... autres clés
+            apiKey: "AIzaSyDBSeXQ9CKWSDhNup51XPL0FKEgQc7xiT8", 
+            authDomain: "voteof2025.firebaseapp.com",
+            projectId: "voteof2025",
+            databaseURL: "https://voteof2025-default-rtdb.firebaseio.com", 
+            storageBucket: "voteof2025.firebasestorage.app",
+            messagingSenderId: "340380987924",
+            appId: "1:340380987924:web:d1d38acc06d02a3bc42d01",
+            measurementId: "G-HBN2JMS2M1"
         };
 
         // Initialisation de l'application
@@ -52,41 +56,46 @@
         const database = app.database();
 
         // -----------------------------------------------------------
-        // LOGIQUE DE CALCUL ET D'AFFICHAGE
+        // 4. LOGIQUE DE CALCUL ET D'AFFICHAGE DES RÉSULTATS
         // -----------------------------------------------------------
 
-        // Fonction principale pour lire et calculer les résultats
+        /**
+         * Lit les données de vote de Firebase, calcule les résultats
+         * et les affiche sur la page.
+         */
         function fetchResults() {
-            const resultsRef = database.ref('votes'); // Le chemin où les votes sont enregistrés
+            const resultsRef = database.ref('votes'); 
+            const resultsContainer = document.getElementById('results-container');
+            const totalVotersElement = document.getElementById('total-voters-count');
 
+            // .on('value') permet d'écouter les changements en temps réel
             resultsRef.on('value', (snapshot) => {
-                const resultsContainer = document.getElementById('results-container');
+                
                 resultsContainer.innerHTML = ''; // Nettoyer l'affichage précédent
                 
                 if (!snapshot.exists()) {
+                    totalVotersElement.textContent = "Total des votants uniques: 0";
                     resultsContainer.innerHTML = '<p class="error">Aucun vote trouvé dans la base de données.</p>';
                     return;
                 }
 
                 const allVotes = snapshot.val();
-                const counts = {};
-                const uniqueVoters = new Set();
+                const counts = {}; // Stocke les résultats agrégés
+                const uniqueVoters = new Set(); // S'assure qu'on compte chaque utilisateur qu'une seule fois
 
-                // 1. Parcourir tous les votes enregistrés
+                // 1. Parcourir tous les enregistrements de vote
                 for (const key in allVotes) {
                     const voteRecord = allVotes[key];
                     const cleanUserId = voteRecord.cleanUserId;
                     
-                    // Si un votant a déjà été compté, on ignore ses autres enregistrements 
-                    // (dans le cas où il y aurait plusieurs enregistrements pour les différentes catégories)
-                    if (uniqueVoters.has(cleanUserId)) {
-                         continue; 
+                    // Si l'utilisateur n'a pas été compté comme votant unique, l'ajouter
+                    if (!uniqueVoters.has(cleanUserId)) {
+                        uniqueVoters.add(cleanUserId);
                     }
-                    uniqueVoters.add(cleanUserId);
 
                     const selections = voteRecord.selections;
 
-                    // 2. Parcourir les sélections du votant
+                    // 2. Compter les sélections par catégorie (Collège et Sous-catégorie)
                     for (const college in selections) {
                         if (!counts[college]) {
                             counts[college] = {};
@@ -94,23 +103,23 @@
 
                         for (const subCategory in selections[college]) {
                             const choiceId = selections[college][subCategory];
-                            const keyName = `${college} - ${subCategory}`; // Clé de regroupement
+                            const keyName = `${college} - ${subCategory}`; 
                             
                             if (!counts[college][keyName]) {
                                 counts[college][keyName] = {};
                             }
 
-                            // Compter le vote pour le choix spécifique
+                            // Incrémenter le compteur du choix
                             counts[college][keyName][choiceId] = (counts[college][keyName][choiceId] || 0) + 1;
                         }
                     }
                 }
 
-                // 3. Afficher les résultats
+                // 3. Afficher les résultats agrégés
                 
-                // Afficher le total des votants uniques
-                document.getElementById('total-voters-count').textContent = `Total des votants uniques: ${uniqueVoters.size}`;
-
+                // Mettre à jour le nombre total de votants uniques
+                totalVotersElement.textContent = `Total des votants uniques: ${uniqueVoters.size}`;
+                resultsContainer.appendChild(totalVotersElement); // Remettre l'élément en haut
 
                 for (const college in counts) {
                     const collegeDiv = document.createElement('div');
@@ -118,12 +127,16 @@
                     collegeDiv.innerHTML = `<h2>Collège: ${college}</h2>`;
                     
                     for (const keyName in counts[college]) {
-                        collegeDiv.innerHTML += `<h3>Catégorie: ${keyName.split(' - ')[1]}</h3>`;
+                        // keyName est au format "Collège - Catégorie"
+                        const categoryName = keyName.split(' - ')[1];
                         
-                        // Récupérer et trier les choix (du plus voté au moins voté)
+                        collegeDiv.innerHTML += `<h3>Catégorie: ${categoryName}</h3>`;
+                        
+                        // Trier les résultats de cette catégorie (du plus voté au moins voté)
                         const sortedChoices = Object.entries(counts[college][keyName])
                             .sort(([, a], [, b]) => b - a);
 
+                        // Afficher les lignes de résultats
                         sortedChoices.forEach(([choiceId, voteCount]) => {
                             const row = document.createElement('div');
                             row.className = 'candidate-row';
@@ -137,11 +150,8 @@
                     resultsContainer.appendChild(collegeDiv);
                 }
                 
-                // Si le conteneur est vide (mais des données existaient), mettre un message
-                if (resultsContainer.innerHTML === '') {
-                    resultsContainer.innerHTML = '<p>Résultats calculés, mais structure vide. Vérifiez la logique de vos sélections.</p>';
-                }
             }, (error) => {
+                // Gestion des erreurs de lecture (ex: règles de sécurité interdisant la lecture)
                 resultsContainer.innerHTML = `<p class="error">Erreur de lecture Firebase: ${error.message}. Vérifiez vos règles de sécurité.</p>`;
             });
         }
