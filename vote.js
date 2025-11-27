@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ⭐️ AJOUTEZ VOTRE LIEN ICI ⭐️
     // CONSERVEZ VOTRE ENDPOINT ACTUEL QUI FONCTIONNE EN DEPLOIEMENT !
-    const GOOGLE_SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbz8KI8exij_mrVb07POYwSLCg3DsmC9Rm_q7evOXdBDErmYA10djP5dsAQfmCIVAViF/exec';
+    const GOOGLE_SHEET_ENDPOINT = 'https://script.google.com/macros/s/AKfycbx4H2hgK6_lyidA68PnH3EtV292vO0sOLwd_LtY5CtfV1BgDS8ipa6je6feYR02-Gry/exec';
     const candidatsListContainer = document.getElementById('candidatsList');
     const btnVoter = document.getElementById('btnVoter'); // L'ID de votre bouton "Valider mon vote"
     const voteMessage = document.getElementById('voteMessage'); // Zone pour le message de succès principal
@@ -417,5 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // FIN DES MODIFICATIONS POUR LA DATE
 
 });
+
 
 
