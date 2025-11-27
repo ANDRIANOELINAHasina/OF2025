@@ -37,10 +37,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnVoter = document.getElementById('btnVoter');
     const messageContainer = document.getElementById('messageContainer');
 
+    // Fonction utilitaire pour afficher les messages (avec type pour la couleur)
+    function displayMessage(message, type) {
+        if (!messageContainer) return;
+        let color = '#2c3e50'; // Couleur par défaut
+        if (type === 'error') color = 'red';
+        else if (type === 'success') color = 'green';
+        else if (type === 'warning') color = 'orange';
+        else if (type === 'loading') color = '#2980b9'; // Bleu pour le chargement
+        
+        messageContainer.innerHTML = `<div style="color: ${color}; margin-top: 15px; font-weight: bold;">${message}</div>`;
+    }
+
     // 2. VÉRIFICATION DE SÉCURITÉ ET INITIALISATION
     if (!loggedInUserId || !loggedInUserName) {
         // Redirection si l'utilisateur n'est pas authentifié
-        messageContainer.innerHTML = '<div style="color: red;">Erreur : Session non valide. Redirection...</div>';
+        displayMessage("Erreur : Session non valide. Redirection...", 'error');
         setTimeout(() => {
             window.location.replace('authentification.html');
         }, 2000);
@@ -49,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (votedUsers.includes(loggedInUserId)) {
         // Si l'utilisateur a déjà voté, on le bloque ici et on le redirige vers les résultats
-        messageContainer.innerHTML = '<div style="color: orange; font-weight: bold;">Vous avez déjà voté. Redirection vers les résultats.</div>';
+        displayMessage("Vous avez déjà voté. Redirection vers les résultats.", 'warning');
         setTimeout(() => {
             window.location.replace('resultat.html');
         }, 2000);
@@ -61,13 +73,50 @@ document.addEventListener('DOMContentLoaded', () => {
         userNameElement.textContent = loggedInUserName;
     }
 
-    // Définition des candidats
+    // ----------------------------------------------------
+    // Définition des candidats MISE À JOUR selon votre photo
+    // ID = Identifiant (TC01, TC02, etc.)
+    // Description contient Collège - Catégorie - Service
+    // ----------------------------------------------------
     const candidats = [
-        { id: 'candidatA', nom: 'Candidat A', description: 'Le candidat du Renouveau et de l\'Espoir.', imageUrl: 'https://placehold.co/150x150/00796b/ffffff?text=A' },
-        { id: 'candidatB', nom: 'Candidat B', description: 'Le candidat de l\'Expérience et de la Stabilité.', imageUrl: 'https://placehold.co/150x150/d32f2f/ffffff?text=B' },
-        { id: 'candidatC', nom: 'Candidat C', description: 'Le candidat du Changement et de l\'Avenir.', imageUrl: 'https://placehold.co/150x150/0288d1/ffffff?text=C' },
-        { id: 'candidatD', nom: 'Candidat D', description: 'Le candidat de la Justice Sociale.', imageUrl: 'https://placehold.co/150x150/512da8/ffffff?text=D' }
+        { 
+            id: 'TC01', 
+            nom: 'ANDRIANAHY Tohimahery Manantena', 
+            description: 'Collège Terrain - Cadre - Service TPR', 
+            imageUrl: `https://placehold.co/150x150/00796b/ffffff?text=TC01` 
+        },
+        { 
+            id: 'TC02', 
+            nom: 'RALAIAVY Stephanoel Guel', 
+            description: 'Collège Terrain - Cadre - Service TPR', 
+            imageUrl: `https://placehold.co/150x150/d32f2f/ffffff?text=TC02` 
+        },
+        { 
+            id: 'TN01', 
+            nom: 'TODISOA Richard Tsimanevoke Christophe', 
+            description: 'Collège Terrain - Non Cadre - Service TPR', 
+            imageUrl: `https://placehold.co/150x150/0288d1/ffffff?text=TN01` 
+        },
+        { 
+            id: 'BC01', 
+            nom: 'RAHENIARIJAONA Jean Christian Angelo', 
+            description: 'Collège Bureau - Cadre - Service ADM', 
+            imageUrl: `https://placehold.co/150x150/512da8/ffffff?text=BC01` 
+        },
+        { 
+            id: 'BN01', 
+            nom: 'RALISOA Chrétienne', 
+            description: 'Collège Bureau - Non Cadre - Service ADM', 
+            imageUrl: `https://placehold.co/150x150/ff7043/ffffff?text=BN01` 
+        },
+        { 
+            id: 'BN02', 
+            nom: 'RAZAFIDONAHARINARIVO Marc Anthony', 
+            description: 'Collège Bureau - Non Cadre - Service DUR', 
+            imageUrl: `https://placehold.co/150x150/7cb342/ffffff?text=BN02` 
+        }
     ];
+    // ----------------------------------------------------
 
     let selectedCandidatId = null;
 
@@ -80,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSelected = candidat.id === selectedCandidatId;
             const cardHtml = `
                 <div class="candidat-card ${isSelected ? 'selected' : ''}" data-id="${candidat.id}">
-                    <img src="${candidat.imageUrl}" alt="Photo de ${candidat.nom}" onerror="this.onerror=null;this.src='https://placehold.co/150x150/9e9e9e/ffffff?text=Candidat'">
+                    <img src="${candidat.imageUrl}" alt="Photo de ${candidat.nom}" onerror="this.onerror=null;this.src='https://placehold.co/150x150/9e9e9e/ffffff?text=${candidat.id}'}">
                     <h3>${candidat.nom}</h3>
                     <p>${candidat.description}</p>
                     <div class="selection-overlay">
@@ -118,6 +167,10 @@ document.addEventListener('DOMContentLoaded', () => {
             displayMessage("Veuillez sélectionner un candidat.", 'error');
             return;
         }
+
+        // Désactiver le bouton pendant le traitement pour éviter les doubles clics
+        if (btnVoter) btnVoter.disabled = true;
+        displayMessage("Enregistrement du vote en cours...", 'loading');
         
         // Données à enregistrer
         const voteData = {
@@ -149,16 +202,13 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error("Erreur lors de l'enregistrement du vote dans Firebase:", error);
             displayMessage(`Erreur lors de l'enregistrement : ${error.message}`, 'error');
-            
+
             // Rétablir les identifiants si une erreur critique se produit avant la redirection
             localStorage.setItem('loggedInUserId', loggedInUserId);
             localStorage.setItem('loggedInUserName', loggedInUserName);
+            // Réactiver le bouton de vote
+            if (btnVoter) btnVoter.disabled = false; 
         }
-    }
-
-    function displayMessage(message, type) {
-        if (!messageContainer) return;
-        messageContainer.innerHTML = `<div style="color: ${type === 'error' ? 'red' : type === 'success' ? 'green' : 'orange'}; margin-top: 15px; font-weight: bold;">${message}</div>`;
     }
 
     // 8. Événement du bouton de vote
